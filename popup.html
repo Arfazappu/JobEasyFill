@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JobEasyFill</title>
+    <!-- <script src="https://kit.fontawesome.com/4855551183.js" crossorigin="anonymous"></script> -->
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+
+      }
+
+      body {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        padding: 20px;
+        background-color: #f4f4f9;
+        width: 500px;
+        margin: auto;
+      }
+      a,
+      input,
+      textarea,
+      button {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+        background:lightgray ;
+        border-radius: 4px;
+        scroll-behavior: smooth;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #333;
+        border-radius: 4px;
+      }
+
+      .header {
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+      }
+      .header img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+      }
+      p.secondary {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .form-container {
+        background: #fff;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .form-container input,
+      .form-container textarea {
+        width: 100%;
+        margin: 4px 0px;
+        padding: 10px 5px;
+        resize: vertical;
+      }
+      .form-container input:focus,
+      .form-container textarea:focus {
+        outline-color: #333;
+      }
+      .add-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        padding: 10px 5px;
+        margin: 4px 0px;
+        font-weight: 600;
+        color: white;
+        background-color: #333;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      .add-btn:hover {
+        transform: translate(-3px, -3px);
+        box-shadow: 3px 3px 1px 1px #666;
+      }
+      .add-btn:active {
+        transform: translate(-0px, -0px);
+        box-shadow: none;
+      }
+      .data-container {
+        background-color: #fff;
+        padding: 16px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+        max-height: 250px;
+        overflow-y: scroll;
+      }
+      #data-list-cont li {
+        list-style: none;
+        font-size: 12px;
+        color: #666;
+        padding: 10px 0px;
+        padding-bottom: 16px;
+      }
+      #data-list-cont li:not(:last-child) {
+        border-bottom: 1px solid lightgray;
+      }
+      .command {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 5px;
+      }
+      .command p {
+        font-size: 14px;
+        color: #2f5cdb;
+      }
+      .data-content-container {
+        position: relative;
+      }
+      .data-content {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        margin-top: 4px;
+      }
+      .expanded {
+        display: block;
+        -webkit-line-clamp: unset;
+      }
+      .toggle-btn {
+        display: none;
+        background: none;
+        border: none;
+        color: goldenrod;
+        font-size: 12px;
+        float: right;
+        cursor: pointer;
+      }
+      .show-btn {
+        display: block;
+      }
+
+      .action-btn {
+        display: flex;
+        gap: 18px;
+      }
+      .action-btn button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0%;
+        padding: 4px;
+        border-radius: 2px;
+        font-size: 12px;
+      }
+      .edit {
+        color: #2f5cdb;
+      }
+      .delete {
+        color: crimson;
+      }
+      .edit:hover {
+        background-color: #2f5cdb;
+        color: white;
+      }
+      .delete:hover {
+        background-color: crimson;
+        color: white;
+      }
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 10px;
+        font-size: 0.9rem;
+        background-color: #333;
+        color: white;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transition: opacity 0.5s, transform 0.5s;
+        transform: translateY(20px);
+      }
+
+      .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .toast.error {
+        background-color: #f44336;
+      }
+
+      .toast.success {
+        background-color: #4caf50;
+      }
+
+      .cta{
+        color:#B28AE4;
+      }
+    </style>
+  </head>
+  <body>
+    <h2 class="header">
+      <img src="images/form-icon-32.png" alt="" /> <span>JobEasyFill</span>
+    </h2>
+    <p class="secondary">
+      Easily fill job application fields with personalized data. Set up
+      shortcuts and use them to quickly enter your information in forms without
+      having to type it every time.
+    </p>
+    <div class="form-container">
+      <form class="form">
+        <input
+          type="text"
+          name="shortcut"
+          id="shortcut"
+          placeholder="New shortcut(eg. /name, /email)"
+          required
+        />
+        <input
+          type="text"
+          name="description"
+          id="desc"
+          placeholder="Description (eg. Email)"
+          required
+        />
+        <textarea
+          name="Content"
+          id="content"
+          placeholder="Content(eg. example@email.com)"
+          required
+        ></textarea>
+        <button type="submit" class="btn add-btn" id="submit-btn">
+          <i class="fa-solid fa-plus"></i> Add Command
+        </button>
+      </form>
+    </div>
+    <div class="data-container">
+      <h3 style="text-align: center; margin-bottom: 10px">Saved Shortcuts</h3>
+      <ul id="data-list-cont">
+        
+      </ul>
+    </div>
+  </body>
+
+  <script src="popup.js"></script>
+</html>
